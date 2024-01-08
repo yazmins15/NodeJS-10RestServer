@@ -39,4 +39,5 @@ const tieneRole = (...roles) => {
 
 module.exports = {
   esAdminRole,
+  tieneRole,
 };
