@@ -5,7 +5,7 @@ const { dbConnection } = require('../database/config');
 class Server {
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 3000;
+    this.port = process.env.PORT || 8080;
     this.usuariosPath = '/api/usuarios';
     this.authPath = '/api/auth'
 
@@ -20,7 +20,7 @@ class Server {
   }
 
   async conectarDB(){
-    await dbConnection;
+    await dbConnection();
   }
 
   middlewares() {
