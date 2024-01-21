@@ -36,8 +36,8 @@ router.put('/:id', [
 
 //Eliminar 
 router.delete('/:id',[
-  //validarJWT,
-  //esAdminRole,
+  validarJWT,
+  esAdminRole,
   //tieneRole('ADMIN_ROLE','VENTAS_ROLE'),
   check('id', 'No es un ID válido').isMongoId(),
   check('id').custom(existeUsuarioPorId),
