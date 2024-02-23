@@ -9,6 +9,7 @@ const productosGet = async(req = request, res = response) => {
     const [total, productos] = await Promise.all([
         Producto.countDocuments(query),
         Producto.find(query)
+                .populate('usuario','nombre')
                 .populate('categoria','nombre')
                 .skip(Number(desde))
                 .limit(Number(limite))
@@ -22,35 +23,34 @@ const productosGet = async(req = request, res = response) => {
 
 //Obtener producto por id 
 const productoGetById = async(req = request, res = response) => {
-    const { id } = req.query;
+    const { id } = req.params;
     
-    const productos = await Producto.findById(id)
+    const producto = await Producto.findById(id)
+                                    .populate('usuario','nombre')
                                     .populate('categoria','nombre');
     
-    res.json({ productos });
+    res.json({ producto });
 
 }
 
 //Crear un producto
 const productoPost = async(req = request, res = response) => {
 
-    const nombre = req.body.nombre.toUpperCase();
-    const { categoria, descripcion } = req.body;
-
+    const {estado, usuario, nombre, ...body} = req.body;
+    nombre = nombre.toUpperCase();
     const productoDB = await Producto.findOne({nombre});
 
     if(productoDB){
         return res.status(400).json({
-            msg: `La categoria ${productoDB.nombre} ya existe `, 
+            msg: `El producto ${productoDB.nombre} ya existe `, 
         });
     }
 
    //Generar la data a guardar
     const data = {
+        ...body,
         nombre,
         usuario: req.usuario._id,
-        categoria,
-        descripcion
     }
 
     const producto = new Producto (data);
@@ -66,9 +66,11 @@ const productoPut = async(req = request, res = response) => {
     const { id } = req.params;
     const { estado, usuario, ...data } = req.body;
 
-    data.nombre = data.nombre.toUpperCase();
-    data.usuario = req.usuario._id;
+    if( data.nombre ){ 
+        data.nombre = data.nombre.toUpperCase();
+    }
 
+    data.usuario = req.usuario._id;
     const producto = await Producto.findByIdAndUpdate(id, data, {new: true});
 
     res.json({ producto });

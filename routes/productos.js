@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validarCampos, validarJWT, esAdminRole} = require('../middlewares');
-const { existeProductoPorId } = require('../helpers/db-validators');
+const { existeProductoPorId, existeCategoriaPorId } = require('../helpers/db-validators');
 const {
     productosGet,
     productoGetById,    
@@ -33,12 +33,11 @@ router.post('/', [
 
 //Actualizar producto - privado - cualquiera con un token valido
 router.put('/:id', [
-    validarJWT,
+    validarJWT, 
     check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom(existeProductoPorId), 
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('categoria', 'Categoria no es un ID válido').isMongoId(),
-    check('categoria').custom(existeCategoriaPorId), 
+    check('id').custom(existeProductoPorId),    
+    //check('categoria', 'Categoria no es un ID válido').isMongoId(),
+    //check('categoria').custom(existeCategoriaPorId),     
     validarCampos
 ], productoPut)
 
