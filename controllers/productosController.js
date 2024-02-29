@@ -37,8 +37,7 @@ const productoGetById = async(req = request, res = response) => {
 const productoPost = async(req = request, res = response) => {
 
     const {estado, usuario, nombre, ...body} = req.body;
-    nombre = nombre.toUpperCase();
-    const productoDB = await Producto.findOne({nombre});
+    const productoDB = await Producto.findOne({nombre: nombre.toUpperCase()});
 
     if(productoDB){
         return res.status(400).json({
@@ -49,7 +48,7 @@ const productoPost = async(req = request, res = response) => {
    //Generar la data a guardar
     const data = {
         ...body,
-        nombre,
+        nombre: nombre.toUpperCase(),
         usuario: req.usuario._id,
     }
 
