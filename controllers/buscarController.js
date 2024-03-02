@@ -1,6 +1,7 @@
 const { response } = require('express');
-const { ObjectId} = require('mongoose');
-const {Usuario, Categoria, Producto, Rol} = require('../models/index');
+const { isValidObjectId } = require("mongoose");
+//const ObjectId = require("mongoose").Types.ObjectId;
+const {Usuario, Categoria, Producto, Role} = require('../models/index');
 
 const coleccionesPermitidas = [
     'usuarios',
@@ -10,8 +11,9 @@ const coleccionesPermitidas = [
 ];
 
 const buscarUsuarios = async(termino='', res = response) => {
-
-    const esMongoId = ObjectId.isValid(termino);
+   
+    const esMongoId = isValidObjectId(termino);
+    //const esMongoId = ObjectId.isValid(termino)
     if(esMongoId){
         const usuario = await Usuario.findById(termino);
         return res.json({
@@ -19,7 +21,7 @@ const buscarUsuarios = async(termino='', res = response) => {
         })
     }
 
-    const regex = new RegExp(termino, 'i');
+    const regex = new RegExp(termino, 'i'); //Para que sea insensible a las minusculas y mayusculas
     const usuarios = await Usuario.find({       
         $or: [{ nombre: regex }, { correo: regex }],
         $and: [{ estado: true }]
@@ -32,7 +34,7 @@ const buscarUsuarios = async(termino='', res = response) => {
 
 const buscarCategorias = async(termino='', res = response) => {
 
-    const esMongoId = ObjectId.isValid(termino);
+    const esMongoId = isValidObjectId(termino);
     if(esMongoId){
         const categoria = await Categoria.findById(termino);
         return res.json({
@@ -50,7 +52,7 @@ const buscarCategorias = async(termino='', res = response) => {
 
 const buscarProductos = async(termino='', res = response) => {
 
-    const esMongoId = ObjectId.isValid(termino);
+    const esMongoId = isValidObjectId(termino);
     if(esMongoId){
         const producto = await Producto.findById(termino).populate('categoria','nombre');
         return res.json({
@@ -71,19 +73,16 @@ const buscarProductos = async(termino='', res = response) => {
 
 const buscarRoles = async(termino='', res = response) => {
 
-    const esMongoId = ObjectId.isValid(termino);
+    const esMongoId = isValidObjectId(termino);
     if(esMongoId){
-        const rol = await Rol.findById(termino);
+        const rol = await Role.findById(termino);
         res.json({
             results: (rol) ? [ rol ] : []
         })
     }
 
     const regex = new RegExp(termino, 'i');
-    const roles = await Rol.find({
-        $or: [{ nombre: regex }, { descripcion: regex }],
-        $and: [{ estado: true }]
-    });
+    const roles = await Role.find({ rol: regex });
    
     res.json({
         results : roles 
