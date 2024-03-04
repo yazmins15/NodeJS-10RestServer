@@ -5,6 +5,6 @@ const { cargarArchivo } = require('../controllers/uploadsController')
 
 const router = Router();
 
-router.get('/', cargarArchivo);
+router.post('/', cargarArchivo);
 
 module.exports = router;

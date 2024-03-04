@@ -12,7 +12,7 @@ const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'],
         //Validar la extension
         //const extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'];
         if(!extensionesValidas.includes( extension )){
-            return reject(`La extensión ${ extension } no es permitida, estas son las permitidas: ${ extensionesValidas}`)
+            return reject(`La extensión ${ extension } no es permitida, estas son las permitidas: ${ extensionesValidas}`); 
         }
         
         const nombreTemp = uuidv4() + '.' + extension;
@@ -22,7 +22,7 @@ const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'],
             if(err){
                 reject(err);
             }
-            resolve('Se subio correctamente el archivo a '+uploadPath);
+            resolve(nombreTemp);
         });        
     })
 }
